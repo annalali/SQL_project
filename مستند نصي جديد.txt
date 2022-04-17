@@ -1,0 +1,137 @@
+-- Create database named " store "
+CREATE DATABASE store; 
+
+-- Create table countries.
+CREATE TABLE countries(
+countries_code int primary key ,
+name  varchar(20),
+continent_name  varchar(20) 
+);
+
+-- Create table users.
+CREATE TABLE users(
+id int primary key not null,
+full_name  varchar(20) not null,
+email varchar(20) unique ,
+gender varchar(1) check(gender='F' or gender='M') not null,
+date_of_birth varchar(15) not null,
+creatad_at datetime,
+country_code int ,
+foreign key (country_code) references countries(countries_code)
+);
+
+USE store;
+-- Create table orders.
+CREATE TABLE orders(
+id int primary key not null,
+user_id int ,
+foreign key (user_id) references users(id),
+statuss varchar(6),
+creatad_at datetime
+);
+
+-- Create table products.
+CREATE TABLE products(
+id int primary key,
+Pname varchar(10) not null,
+price int,
+statuss varchar(10),
+created_at datetime 
+);
+
+-- Create table order_products.
+CREATE TABLE order_products(
+order_id int,
+foreign key (order_id) references orders(id),
+product_id int,
+foreign key (product_id) references products(id),
+quantity int
+);
+
+
+USE store;
+show tables;
+ 
+/* countries
+Add unique constraint to column " name "*/
+alter table countries
+ADD unique(name);
+
+/* countries
+Add not null constraint to column " continent_name ".*/
+USE store;
+alter table countries
+MODIFY continent_name varchar(20) NOT NULL;
+
+
+-- orders table,  Add check constraint to column " status " between 'start' or 'finish'.
+USE store;
+alter table orders
+add check(statuss='start' or statuss='finish');
+
+-- order_items table, Add default value to column " quantity " value 0.
+USE store;
+ALTER TABLE order_products 
+ALTER  quantity SET DEFAULT 0;
+
+/* products
+Add default value to column " price " value 0.
+Add not null constraint to column " name ".
+Add check constraint to column " status " between 'valid' or 'expired'.*/
+
+USE store;
+ALTER TABLE products 
+-- 1- Add default value to column " price " value 0.
+ALTER  price SET DEFAULT 0;
+
+-- 2- Add not null constraint to column " name ".
+ALTER TABLE products 
+MODIFY Pname INT NOT NULL;
+
+-- 3
+USE store;
+ALTER TABLE products 
+ADD CHECK(statuss='valid' or statuss='expired');
+
+/* # DML - Insert
+Add new row to the countries table.*/
+USE store;
+insert into countries values ('1','Riyadh','Saudi Arabia');
+
+
+-- Add new row to the users table.
+USE store;
+insert into users values ('001','Abdulla Mohammad','Abdulla@s.com','M', '1988-09-25', '2022-01-01', '1');
+select * from users
+
+-- Add new row to the orders table.
+USE store;
+insert into orders values ('123','001','active','2022-02-01 05;30:00');
+select * from orders
+
+-- Add new row to the products table.
+USE store;
+insert into products values ('44','car','30000','Valid','2022-02-01 05;30:00');
+
+-- Add new row to the order_products table.
+USE store;
+insert into order_products values ('123','404','11');
+select * from order_products
+
+-- Update row from countries table.
+USE store;
+update countries 
+set name ='Dammam' 
+where countries_code=1;
+select * from countries 
+
+-- Delete row from products table.
+USE store;
+delete from products  
+where id=44;
+select * from products 
+
+
+
+
+ 
